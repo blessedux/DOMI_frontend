@@ -12,7 +12,7 @@ export default function DashboardPage() {
           <h2 className="text-2xl font-bold tracking-tight">Panel de control</h2>
           <p className="text-muted-foreground">Bienvenido al sistema de gestión de permisos municipales.</p>
         </div>
-        <Button className="gap-1" asChild>
+        <Button className="gap-1 bg-pink-500 hover:bg-pink-600" asChild>
           <Link href="/dashboard/new-application">
             <Plus className="h-4 w-4" />
             Nueva solicitud
@@ -64,10 +64,10 @@ export default function DashboardPage() {
       </div>
 
       <Tabs defaultValue="recent">
-        <TabsList>
-          <TabsTrigger value="recent">Solicitudes recientes</TabsTrigger>
-          <TabsTrigger value="pending">Pendientes</TabsTrigger>
-          <TabsTrigger value="observations">Con observaciones</TabsTrigger>
+        <TabsList className="bg-pink-50 border border-pink-100">
+          <TabsTrigger value="recent" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">Solicitudes recientes</TabsTrigger>
+          <TabsTrigger value="pending" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">Pendientes</TabsTrigger>
+          <TabsTrigger value="observations" className="data-[state=active]:bg-pink-500 data-[state=active]:text-white">Con observaciones</TabsTrigger>
         </TabsList>
         <TabsContent value="recent" className="space-y-4">
           <Card>
@@ -88,7 +88,7 @@ export default function DashboardPage() {
                         <p className="text-sm text-muted-foreground">Enviado el {application.date}</p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm" asChild>
+                    <Button variant="outline" size="sm" className="border-pink-200 hover:bg-pink-50 hover:text-pink-600" asChild>
                       <Link href={`/dashboard/applications/${application.id}`}>Ver detalles</Link>
                     </Button>
                   </div>
@@ -116,7 +116,7 @@ export default function DashboardPage() {
                         <p className="text-sm text-muted-foreground">Enviado el {application.date}</p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm" asChild>
+                    <Button variant="outline" size="sm" className="border-pink-200 hover:bg-pink-50 hover:text-pink-600" asChild>
                       <Link href={`/dashboard/applications/${application.id}`}>Ver detalles</Link>
                     </Button>
                   </div>
@@ -146,7 +146,7 @@ export default function DashboardPage() {
                         </p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm" asChild>
+                    <Button variant="outline" size="sm" className="border-pink-200 hover:bg-pink-50 hover:text-pink-600" asChild>
                       <Link href={`/dashboard/observations/${application.id}`}>Resolver</Link>
                     </Button>
                   </div>
@@ -170,7 +170,7 @@ function getStatusColor(status: string) {
     case "rejected":
       return "bg-red-100 text-red-600"
     case "observation":
-      return "bg-orange-100 text-orange-600"
+      return "bg-pink-100 text-pink-600"
     default:
       return "bg-gray-100 text-gray-600"
   }

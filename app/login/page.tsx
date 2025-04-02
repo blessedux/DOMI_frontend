@@ -45,12 +45,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-muted/40 p-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-white to-pink-50 p-4">
       <Link href="/" className="absolute left-4 top-4 flex items-center gap-2 md:left-8 md:top-8">
-        <DomiLogo className="h-6 w-6" />
-        <span className="font-bold">DOMI</span>
+        <DomiLogo className="h-8 w-8 text-pink-500" />
+        <span className="font-bold text-xl text-black">DOMI</span>
       </Link>
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md border border-pink-100 shadow-lg">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Iniciar sesión</CardTitle>
           <CardDescription>Ingrese sus credenciales para acceder al sistema</CardDescription>
@@ -122,12 +122,12 @@ export default function LoginPage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col">
-            <Button className="w-full" type="submit" disabled={isLoading}>
+            <Button className="w-full bg-pink-500 hover:bg-pink-600" type="submit" disabled={isLoading}>
               {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
             </Button>
             <p className="mt-4 text-center text-sm text-muted-foreground">
               ¿No tiene una cuenta?{" "}
-              <Link href="/register" className="text-primary hover:underline">
+              <Link href="/register" className="text-pink-500 hover:text-pink-700 hover:underline">
                 Registrarse
               </Link>
             </p>

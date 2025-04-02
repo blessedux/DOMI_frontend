@@ -118,11 +118,11 @@ export function DashboardSidebar({ userRole = "applicant" }: DashboardSidebarPro
   const menuItems = getMenuItems()
 
   return (
-    <Sidebar>
-      <SidebarHeader className="border-b">
+    <Sidebar className="bg-white border-r border-pink-100">
+      <SidebarHeader className="border-b border-pink-100">
         <div className="flex items-center gap-2 px-2 py-3">
-          <Building2 className="h-6 w-6" />
-          <span className="font-bold text-lg">DOMI</span>
+          <Building2 className="h-6 w-6 text-pink-500" />
+          <span className="font-bold text-lg text-black">DOMI</span>
           <div className="ml-auto md:hidden">
             <SidebarTrigger />
           </div>
@@ -132,37 +132,52 @@ export function DashboardSidebar({ userRole = "applicant" }: DashboardSidebarPro
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.title}>
+              <SidebarMenuButton 
+                asChild 
+                isActive={pathname === item.href} 
+                tooltip={item.title}
+                className={`hover:bg-pink-50 ${pathname === item.href ? 'bg-pink-100 text-pink-600' : ''}`}
+              >
                 <Link href={item.href}>
-                  <item.icon className="h-5 w-5" />
+                  <item.icon className={`h-5 w-5 ${pathname === item.href ? 'text-pink-500' : ''}`} />
                   <span>{item.title}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
-        <SidebarSeparator />
+        <SidebarSeparator className="bg-pink-100" />
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === "/dashboard/profile"} tooltip="Perfil">
+            <SidebarMenuButton 
+              asChild 
+              isActive={pathname === "/dashboard/profile"} 
+              tooltip="Perfil"
+              className={`hover:bg-pink-50 ${pathname === "/dashboard/profile" ? 'bg-pink-100 text-pink-600' : ''}`}
+            >
               <Link href="/dashboard/profile">
-                <User className="h-5 w-5" />
+                <User className={`h-5 w-5 ${pathname === "/dashboard/profile" ? 'text-pink-500' : ''}`} />
                 <span>Perfil</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === "/dashboard/settings"} tooltip="Configuración">
+            <SidebarMenuButton 
+              asChild 
+              isActive={pathname === "/dashboard/settings"} 
+              tooltip="Configuración"
+              className={`hover:bg-pink-50 ${pathname === "/dashboard/settings" ? 'bg-pink-100 text-pink-600' : ''}`}
+            >
               <Link href="/dashboard/settings">
-                <Settings className="h-5 w-5" />
+                <Settings className={`h-5 w-5 ${pathname === "/dashboard/settings" ? 'text-pink-500' : ''}`} />
                 <span>Configuración</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="border-t p-2">
-        <Button variant="outline" className="w-full justify-start gap-2" asChild>
+      <SidebarFooter className="border-t border-pink-100 p-2">
+        <Button variant="outline" className="w-full justify-start gap-2 border-pink-200 hover:bg-pink-50 hover:text-pink-600" asChild>
           <Link href="/logout">
             <LogOut className="h-4 w-4" />
             Cerrar sesión
