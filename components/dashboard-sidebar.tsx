@@ -85,22 +85,22 @@ export function DashboardSidebar({ userRole = "applicant" }: DashboardSidebarPro
     const officialItems = [
       {
         title: "Inicio",
-        href: "/admin-dashboard",
+        href: "/dashboard",
         icon: Home,
       },
       {
         title: "Todas las solicitudes",
-        href: "/admin-dashboard/all-applications",
+        href: "/dashboard/all-applications",
         icon: FileText,
       },
       {
         title: "Aprobaciones pendientes",
-        href: "/admin-dashboard/pending-approvals",
+        href: "/dashboard/pending-approvals",
         icon: FileCheck,
       },
       {
         title: "Gestión de usuarios",
-        href: "/admin-dashboard/users",
+        href: "/dashboard/users",
         icon: User,
       },
     ]
