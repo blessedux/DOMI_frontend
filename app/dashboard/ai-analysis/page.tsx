@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { ArrowLeft, FileUp, Upload, Sparkles, Search, Download, AlertTriangle, Brain, HelpCircle } from "lucide-react"
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/tooltip"
 import Image from "next/image"
 
-export default function AIAnalysisPage() {
+function AIAnalysisContent() {
   const searchParams = useSearchParams()
   const appId = searchParams.get("appId")
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -239,5 +239,20 @@ export default function AIAnalysisPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function AIAnalysisPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-screen">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent"></div>
+          <p className="text-sm text-muted-foreground">Cargando...</p>
+        </div>
+      </div>
+    }>
+      <AIAnalysisContent />
+    </Suspense>
   )
 } 
