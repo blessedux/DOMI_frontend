@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { ArrowLeft, FileUp, Upload, Sparkles, Search, Download, AlertTriangle, Brain, HelpCircle } from "lucide-react"
+import { ArrowLeft, FileUp, Upload, Sparkles, Search, Download, AlertTriangle, Brain, HelpCircle, CheckCircle2, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -22,8 +22,7 @@ import Image from "next/image"
 function AIAnalysisContent() {
   const searchParams = useSearchParams()
   const appId = searchParams.get("appId")
-  const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [analysisState, setAnalysisState] = useState<"initial" | "loading" | "complete">("initial")
   const [analysisType, setAnalysisType] = useState<string>("planos")
   const { toast } = useToast()
 
@@ -33,35 +32,22 @@ function AIAnalysisContent() {
         title: "Solicitud vinculada",
         description: `Análisis vinculado a la solicitud ${appId}`,
       })
+      // Automatically start analysis if an appId is present
+      startAnalysis()
     }
   }, [appId, toast])
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0])
-    }
-  }
-
-  const handleAnalyze = () => {
-    if (!selectedFile) {
-      toast({
-        title: "Error",
-        description: "Por favor seleccione un archivo para analizar.",
-        variant: "destructive",
-      })
-      return
-    }
-
-    setIsAnalyzing(true)
-
-    // Simular análisis
+  const startAnalysis = () => {
+    setAnalysisState("loading")
+    
+    // Simulate analysis process
     setTimeout(() => {
-      setIsAnalyzing(false)
+      setAnalysisState("complete")
       toast({
         title: "Análisis completado",
-        description: `El archivo ${selectedFile.name} ha sido analizado correctamente.`,
+        description: "Los documentos de la solicitud han sido analizados correctamente.",
       })
-    }, 3000)
+    }, 3500)
   }
 
   return (
@@ -83,7 +69,7 @@ function AIAnalysisContent() {
               <div>
                 <CardTitle>Análisis de documentos</CardTitle>
                 <CardDescription>
-                  Cargue documentos para análisis automatizado con inteligencia artificial
+                  Análisis automatizado de los documentos de su solicitud
                 </CardDescription>
               </div>
               <TooltipProvider>
@@ -146,52 +132,72 @@ function AIAnalysisContent() {
               </TabsList>
             </Tabs>
 
-            <div className="flex flex-col items-center justify-center gap-4 p-6 border-2 border-dashed rounded-lg">
-              <div className="rounded-full bg-indigo-100 p-3">
-                <FileUp className="h-6 w-6 text-indigo-500" />
+            {analysisState === "initial" && !appId && (
+              <div className="flex flex-col items-center justify-center gap-4 p-6 border-2 border-dashed rounded-lg">
+                <div className="rounded-full bg-amber-100 p-3">
+                  <AlertTriangle className="h-6 w-6 text-amber-500" />
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-medium">
+                    No hay solicitud vinculada
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Por favor, acceda desde una solicitud específica para analizar sus documentos
+                  </p>
+                </div>
+                <Button variant="outline" asChild>
+                  <Link href="/dashboard/applications">
+                    Ver mis solicitudes
+                  </Link>
+                </Button>
               </div>
-              <div className="text-center">
-                <p className="text-sm font-medium">
-                  {selectedFile ? selectedFile.name : "Arrastre archivos aquí o haga clic para cargar"}
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Formatos soportados: PDF, JPG, PNG (máx. 25MB)
-                </p>
-              </div>
-              <Input
-                id="file-upload"
-                type="file"
-                className="hidden"
-                onChange={handleFileChange}
-                accept=".pdf,.jpg,.jpeg,.png"
-              />
-              <Label
-                htmlFor="file-upload"
-                className="cursor-pointer bg-muted hover:bg-muted/80 px-4 py-2 rounded text-sm font-medium"
-              >
-                Seleccionar archivo
-              </Label>
-            </div>
+            )}
 
-            <div className="flex justify-center">
-              <Button
-                className="gap-1 bg-indigo-500 hover:bg-indigo-600"
-                onClick={handleAnalyze}
-                disabled={!selectedFile || isAnalyzing}
-              >
-                {isAnalyzing ? (
-                  <>
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                    Analizando...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4" />
-                    Analizar con IA
-                  </>
-                )}
-              </Button>
-            </div>
+            {analysisState === "loading" && (
+              <div className="flex flex-col items-center justify-center gap-4 p-8">
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent"></div>
+                <div className="text-center">
+                  <p className="text-sm font-medium">Analizando documentos de la solicitud {appId}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Aplicando algoritmos de inteligencia artificial...
+                  </p>
+                </div>
+                <div className="w-full max-w-xs bg-gray-200 rounded-full h-2.5 mt-2">
+                  <div className="bg-indigo-500 h-2.5 rounded-full animate-pulse" style={{ width: '70%' }}></div>
+                </div>
+              </div>
+            )}
+
+            {analysisState === "complete" && (
+              <div className="flex flex-col gap-4">
+                <div className="p-4 border rounded-lg bg-green-50">
+                  <div className="flex items-start gap-3">
+                    <div className="rounded-full bg-green-100 p-2 mt-0.5">
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium">Análisis completado</h4>
+                      <p className="text-xs text-muted-foreground">
+                        Todos los documentos de la solicitud han sido analizados correctamente.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="relative h-[200px] w-full rounded-lg overflow-hidden border">
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-indigo-500 to-pink-500 text-white">
+                    Vista previa del análisis de planos
+                  </div>
+                </div>
+                
+                <div className="flex justify-end">
+                  <Button className="gap-1 bg-indigo-500 hover:bg-indigo-600">
+                    <FileText className="h-4 w-4" />
+                    Ver informe completo
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -204,18 +210,46 @@ function AIAnalysisContent() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col items-center justify-center gap-4 py-6">
-                <div className="rounded-full bg-gray-100 p-3">
-                  <AlertTriangle className="h-6 w-6 text-gray-500" />
+              {analysisState !== "complete" ? (
+                <div className="flex flex-col items-center justify-center gap-4 py-6">
+                  <div className="rounded-full bg-gray-100 p-3">
+                    <AlertTriangle className="h-6 w-6 text-gray-500" />
+                  </div>
+                  <p className="text-center text-sm text-muted-foreground">
+                    {analysisState === "loading" 
+                      ? "Preparando acta de observaciones..." 
+                      : "Realice un análisis para generar el acta de observaciones"}
+                  </p>
+                  <Button variant="outline" disabled={true}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Descargar acta
+                  </Button>
                 </div>
-                <p className="text-center text-sm text-muted-foreground">
-                  Realice un análisis con IA para generar el acta de observaciones
-                </p>
-                <Button variant="outline" disabled={true}>
-                  <Download className="h-4 w-4 mr-2" />
-                  Descargar acta
-                </Button>
-              </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="border rounded-lg p-4">
+                    <h4 className="text-sm font-medium mb-2">Observaciones detectadas:</h4>
+                    <ul className="text-sm space-y-2">
+                      <li className="flex items-start gap-2">
+                        <span className="rounded-full bg-amber-100 p-1 mt-0.5 flex-shrink-0">
+                          <AlertTriangle className="h-3 w-3 text-amber-500" />
+                        </span>
+                        <span>Falta indicar la escala numérica en planos de arquitectura.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="rounded-full bg-amber-100 p-1 mt-0.5 flex-shrink-0">
+                          <AlertTriangle className="h-3 w-3 text-amber-500" />
+                        </span>
+                        <span>La distancia de retiro frontal no cumple con la normativa municipal (mínimo 3m).</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <Button className="w-full">
+                    <Download className="h-4 w-4 mr-2" />
+                    Descargar acta de observaciones
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -227,15 +261,32 @@ function AIAnalysisContent() {
           <CardDescription>Historial de análisis realizados con IA</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-lg border p-8 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-              <Sparkles className="h-6 w-6 text-muted-foreground" />
+          {analysisState === "complete" ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between rounded-lg border p-4">
+                <div className="flex items-center gap-4">
+                  <div className="rounded-full bg-indigo-100 p-2">
+                    <Sparkles className="h-4 w-4 text-indigo-500" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Solicitud {appId}</p>
+                    <p className="text-sm text-muted-foreground">Analizado hace unos momentos</p>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm">Ver detalles</Button>
+              </div>
             </div>
-            <h3 className="mb-2 text-lg font-medium">No hay análisis recientes</h3>
-            <p className="text-sm text-muted-foreground">
-              Los análisis que realice aparecerán aquí para su referencia.
-            </p>
-          </div>
+          ) : (
+            <div className="rounded-lg border p-8 text-center">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                <Sparkles className="h-6 w-6 text-muted-foreground" />
+              </div>
+              <h3 className="mb-2 text-lg font-medium">No hay análisis recientes</h3>
+              <p className="text-sm text-muted-foreground">
+                Los análisis que realice aparecerán aquí para su referencia.
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
