@@ -39,7 +39,7 @@ export default function LoginPage() {
       } else if (userRole === "reviewer") {
         router.push("/reviewer-dashboard")
       } else {
-        router.push("/admin-dashboard")
+        router.push("/dashboard")
       }
     }, 1500)
   }
