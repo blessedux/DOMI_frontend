@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { AlertTriangle, CheckCircle2, Clock, FileText, Plus, Sparkles, Brain } from "lucide-react"
+import { AlertTriangle, CheckCircle2, Clock, FileText, Plus } from "lucide-react"
 import Link from "next/link"
 
 export default function DashboardPage() {
@@ -13,12 +13,6 @@ export default function DashboardPage() {
           <p className="text-muted-foreground">Bienvenido al sistema de gestión de permisos municipales.</p>
         </div>
         <div className="flex gap-2 flex-col sm:flex-row">
-          <Button className="gap-1 bg-indigo-500 hover:bg-indigo-600" asChild>
-            <Link href="/dashboard/ai-analysis">
-              <Sparkles className="h-4 w-4" />
-              Análisis con IA
-            </Link>
-          </Button>
           <Button className="gap-1 bg-pink-500 hover:bg-pink-600" asChild>
             <Link href="/dashboard/new-application">
               <Plus className="h-4 w-4" />

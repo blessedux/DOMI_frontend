@@ -6,7 +6,7 @@ import type React from "react"
 
 import { useState } from "react"
 import Link from "next/link"
-import { AlertTriangle, ArrowLeft, CheckCircle2, Clock, Download, FileText, MessageSquare, Upload } from "lucide-react"
+import { AlertTriangle, ArrowLeft, CheckCircle2, Clock, Download, FileText, MessageSquare, Upload, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -306,6 +306,12 @@ export default function ApplicationDetailPage({ params }: { params: { id: string
                   <MessageSquare className="h-4 w-4" />
                   Contactar al revisor
                 </Button>
+                <Button className="w-full gap-1 bg-indigo-500 hover:bg-indigo-600 text-white" asChild>
+                  <Link href={`/dashboard/ai-analysis?appId=${params.id}`}>
+                    <Sparkles className="h-4 w-4" />
+                    Análisis con IA
+                  </Link>
+                </Button>
                 <Button className="w-full gap-1" variant="outline" asChild>
                   <Link href="/dashboard/applications">
                     <ArrowLeft className="h-4 w-4" />
@@ -325,13 +331,13 @@ export default function ApplicationDetailPage({ params }: { params: { id: string
 function getStatusVariant(status: string) {
   switch (status) {
     case "approved":
-      return "success"
+      return "default"
     case "pending":
       return "outline"
     case "rejected":
       return "destructive"
     case "observation":
-      return "warning"
+      return "secondary"
     default:
       return "secondary"
   }
