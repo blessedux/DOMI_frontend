@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useToast } from "@/hooks/use-toast"
+import DomiLogo from '/public/icons/logo/domi_logo.svg';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -46,7 +47,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-muted/40 p-4">
       <Link href="/" className="absolute left-4 top-4 flex items-center gap-2 md:left-8 md:top-8">
-        <Building2 className="h-6 w-6" />
+        <DomiLogo className="h-6 w-6" />
         <span className="font-bold">DOMI</span>
       </Link>
       <Card className="w-full max-w-md">
@@ -108,6 +109,7 @@ export default function LoginPage() {
                 <input
                   type="checkbox"
                   id="remember"
+                  aria-label="Recordarme"
                   className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                 />
                 <Label htmlFor="remember" className="text-sm font-normal">
