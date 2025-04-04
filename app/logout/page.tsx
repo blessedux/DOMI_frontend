@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Building2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
-import DomiLogo from '/public/icons/logo/domi_logo.svg';
+import DomiLogo from '/public/icons/logo/domilogo1.svg';
 
 export default function LogoutPage() {
   const router = useRouter()
