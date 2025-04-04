@@ -1,9 +1,9 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import {
-  Building2,
   FileText,
   Home,
   LogOut,
@@ -121,7 +121,13 @@ export function DashboardSidebar({ userRole = "applicant" }: DashboardSidebarPro
     <Sidebar className="bg-white border-r border-pink-100">
       <SidebarHeader className="border-b border-pink-100">
         <div className="flex items-center gap-2 px-2 py-3">
-          <Building2 className="h-6 w-6 text-pink-500" />
+          <Image 
+            src="/icons/logo/domilogo.svg" 
+            alt="DOMI Logo" 
+            width={24} 
+            height={24} 
+            className="h-6 w-6"
+          />
           <span className="font-bold text-lg text-black">DOMI</span>
           <div className="ml-auto md:hidden">
             <SidebarTrigger />

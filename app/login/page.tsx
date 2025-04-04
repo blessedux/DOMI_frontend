@@ -4,15 +4,15 @@ import type React from "react"
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { Building2, Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useToast } from "@/hooks/use-toast"
-import DomiLogo from '/public/icons/logo/domi_logo.svg';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -47,8 +47,13 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-white to-pink-50 p-4">
       <Link href="/" className="absolute left-4 top-4 flex items-center gap-2 md:left-8 md:top-8">
-        <DomiLogo className="h-8 w-8 text-pink-500" />
-        <span className="font-bold text-xl text-black">DOMI</span>
+        <Image 
+          src="/icons/logo/domilogo1.svg"
+          alt="DOMI Logo"
+          width={32}
+          height={32}
+          className="h-24 w-24"
+        />
       </Link>
       <Card className="w-full max-w-md border border-pink-100 shadow-lg">
         <CardHeader className="space-y-1">
