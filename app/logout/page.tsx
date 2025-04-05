@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { useToast } from "@/hooks/use-toast"
@@ -8,9 +8,12 @@ import { Card, CardContent } from "@/components/ui/card"
 import { WavyBackground } from "@/components/ui/wavy-background"
 
 export default function LogoutPage() {
+  const [isTransitioning, setIsTransitioning] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
   const cardRef = useRef<HTMLDivElement>(null)
+  const pageRef = useRef<HTMLDivElement>(null)
+  const wavyBgRef = useRef<HTMLDivElement>(null)
 
   // Magnetic card effect
   useEffect(() => {
@@ -85,77 +88,97 @@ export default function LogoutPage() {
         description: "Ha cerrado sesión correctamente",
       })
 
-      // Redirect to login page after a short delay
+      // Start transition animation after progress bar completes
       setTimeout(() => {
-        router.push("/login")
+        setIsTransitioning(true)
+        
+        // Redirect to login page after transition animation
+        setTimeout(() => {
+          router.push("/login")
+        }, 700) // Time matches the CSS transition duration
       }, 1500)
     }
 
     logoutUser()
   }, [router, toast])
 
+  // Common transition classes for consistent animation
+  const transitionClasses = isTransitioning ? 
+    'opacity-0 blur-md scale-105' : 
+    'opacity-100 blur-0 scale-100';
+
   return (
-    <WavyBackground 
-      containerClassName="min-h-screen" 
-      colors={["#ec4899", "#db2777", "#be185d", "#9d174d"]} 
-      waveWidth={100}
-      backgroundFill="#FDF2F8"
-      blur={5}
-      speed="slow"
-      waveOpacity={0.7}
+    <div 
+      ref={pageRef}
+      className="transition-all duration-700" // Container without transition classes
     >
-      <div className="flex min-h-screen flex-col items-center justify-center p-4">
-        <div className="absolute left-4 top-4 z-10 md:left-8 md:top-8">
-          <div className="flex items-center gap-2">
-            <Image 
-              src="/icons/logo/domilogo1.svg"
-              alt="DOMI Logo"
-              width={32}
-              height={32}
-              className="h-10 w-10"
-            />
-          </div>
-        </div>
-        
-        <div 
-          ref={cardRef} 
-          className="w-full max-w-md will-change-transform"
+      <div 
+        ref={wavyBgRef}
+        className={`transition-all duration-700 ${transitionClasses}`} // Apply same transition to wavy bg wrapper
+      >
+        <WavyBackground 
+          containerClassName="min-h-screen" 
+          colors={["#ec4899", "#db2777", "#be185d", "#9d174d"]} 
+          waveWidth={100}
+          backgroundFill="#FDF2F8"
+          blur={5}
+          speed="slow"
+          waveOpacity={0.7}
         >
-          <Card className="w-full border border-pink-100/30 shadow-xl bg-white/70 backdrop-blur-md z-10 dark:bg-gray-950/50 dark:border-pink-900/30 dark:backdrop-blur-md">
-            <div className="absolute inset-0 rounded-md bg-gradient-to-b from-pink-50/50 to-white/50 dark:from-pink-950/30 dark:to-gray-950/30 opacity-80"></div>
-            <CardContent className="flex flex-col items-center justify-center gap-4 text-center p-10 relative">
-              <div className="h-16 w-16 rounded-full bg-pink-100/80 flex items-center justify-center">
+          <div className="flex min-h-screen flex-col items-center justify-center p-4">
+            <div className="absolute left-4 top-4 z-10 md:left-8 md:top-8">
+              <div className="flex items-center gap-2">
                 <Image 
                   src="/icons/logo/domilogo1.svg"
                   alt="DOMI Logo"
                   width={32}
                   height={32}
-                  className="h-8 w-8 animate-pulse"
+                  className="h-10 w-10"
                 />
               </div>
-              <h1 className="text-2xl font-bold text-gray-900">Cerrando sesión...</h1>
-              <p className="text-muted-foreground">Gracias por utilizar el sistema DOMI</p>
-              <div className="mt-4 w-full max-w-sm mx-auto">
-                <div className="h-1 w-full bg-gray-200 rounded overflow-hidden">
-                  <div className="h-full bg-pink-500 animate-[logout_1.5s_ease-in-out_forwards]"></div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+            </div>
+            
+            <div 
+              ref={cardRef} 
+              className={`w-full max-w-md will-change-transform transition-all duration-700 ${transitionClasses}`} // Use same transition classes
+            >
+              <Card className="w-full border border-pink-100/30 shadow-xl bg-white/70 backdrop-blur-md z-10 dark:bg-gray-950/50 dark:border-pink-900/30 dark:backdrop-blur-md">
+                <div className="absolute inset-0 rounded-md bg-gradient-to-b from-pink-50/50 to-white/50 dark:from-pink-950/30 dark:to-gray-950/30 opacity-80"></div>
+                <CardContent className="flex flex-col items-center justify-center gap-4 text-center p-10 relative">
+                  <div className="h-16 w-16 rounded-full bg-pink-100/80 flex items-center justify-center">
+                    <Image 
+                      src="/icons/logo/domilogo1.svg"
+                      alt="DOMI Logo"
+                      width={32}
+                      height={32}
+                      className="h-8 w-8 animate-pulse"
+                    />
+                  </div>
+                  <h1 className="text-2xl font-bold text-gray-900">Cerrando sesión...</h1>
+                  <p className="text-muted-foreground">Gracias por utilizar el sistema DOMI</p>
+                  <div className="mt-4 w-full max-w-sm mx-auto">
+                    <div className="h-1 w-full bg-gray-200 rounded overflow-hidden">
+                      <div className="h-full bg-pink-500 animate-[logout_1.5s_ease-in-out_forwards]"></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
 
-      <style jsx global>{`
-        @keyframes logout {
-          0% {
-            width: 0%;
-          }
-          100% {
-            width: 100%;
-          }
-        }
-      `}</style>
-    </WavyBackground>
+          <style jsx global>{`
+            @keyframes logout {
+              0% {
+                width: 0%;
+              }
+              100% {
+                width: 100%;
+              }
+            }
+          `}</style>
+        </WavyBackground>
+      </div>
+    </div>
   )
 }
 
