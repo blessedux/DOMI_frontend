@@ -2,8 +2,9 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { AlertCircle, ArrowLeft, FileText, Upload, X, CheckCircle, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -25,6 +26,24 @@ export default function NewApplicationPage() {
     issues: string[]
   } | null>(null)
   const { toast } = useToast()
+  const router = useRouter()
+  
+  // Check if user is a reviewer and redirect if they are
+  useEffect(() => {
+    // In a real app, you would get this from an auth context or API
+    // For this demo, we're checking the URL path to determine role
+    const isReviewer = window.location.pathname.includes('/reviewer-dashboard')
+      || localStorage.getItem('userRole') === 'reviewer'
+    
+    if (isReviewer) {
+      toast({
+        title: "Acceso denegado",
+        description: "Los revisores no pueden crear solicitudes nuevas",
+        variant: "destructive",
+      })
+      router.push('/reviewer-dashboard')
+    }
+  }, [router, toast])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {

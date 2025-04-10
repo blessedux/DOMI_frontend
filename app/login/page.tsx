@@ -198,12 +198,6 @@ export default function LoginPage() {
                             Revisor
                           </Label>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="official" id="official" />
-                          <Label htmlFor="official" className="font-normal">
-                            Funcionario DOM
-                          </Label>
-                        </div>
                       </RadioGroup>
                     </div>
                     <div className="flex items-center justify-between">

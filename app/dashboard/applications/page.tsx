@@ -1,4 +1,7 @@
+"use client"
+
 import Link from "next/link"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertTriangle, ArrowLeft, CheckCircle2, Clock, FileText, Search } from "lucide-react"
@@ -7,21 +10,39 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 
 export default function ApplicationsPage() {
+  const [isReviewer, setIsReviewer] = useState(false);
+  
+  useEffect(() => {
+    // Check if user is a reviewer based on URL path or localStorage
+    const isReviewerUser = window.location.pathname.includes('/reviewer-dashboard') 
+      || localStorage.getItem('userRole') === 'reviewer'
+    
+    setIsReviewer(isReviewerUser);
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon" asChild>
-          <Link href="/dashboard">
+          <Link href={isReviewer ? "/reviewer-dashboard" : "/dashboard"}>
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
-        <h2 className="text-2xl font-bold tracking-tight">Mis solicitudes</h2>
+        <h2 className="text-2xl font-bold tracking-tight">
+          {isReviewer ? "Solicitudes pendientes" : "Mis solicitudes"}
+        </h2>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Todas las solicitudes</CardTitle>
-          <CardDescription>Gestione y revise el estado de todas sus solicitudes</CardDescription>
+          <CardTitle>
+            {isReviewer ? "Solicitudes por revisar" : "Todas las solicitudes"}
+          </CardTitle>
+          <CardDescription>
+            {isReviewer 
+              ? "Gestione y revise las solicitudes pendientes asignadas a usted" 
+              : "Gestione y revise el estado de todas sus solicitudes"}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-2 mb-6">
@@ -61,7 +82,11 @@ export default function ApplicationsPage() {
                     <TableCell>{application.stage}</TableCell>
                     <TableCell className="text-right">
                       <Button variant="outline" size="sm" asChild>
-                        <Link href={`/dashboard/applications/${application.id}`}>Ver detalles</Link>
+                        <Link href={isReviewer 
+                          ? `/reviewer-dashboard/review/${application.id}`
+                          : `/dashboard/applications/${application.id}`}>
+                          {isReviewer ? "Revisar" : "Ver detalles"}
+                        </Link>
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -79,13 +104,13 @@ export default function ApplicationsPage() {
 function getStatusVariant(status: string) {
   switch (status) {
     case "approved":
-      return "success"
+      return "default"
     case "pending":
       return "outline"
     case "rejected":
       return "destructive"
     case "observation":
-      return "warning"
+      return "secondary"
     default:
       return "secondary"
   }

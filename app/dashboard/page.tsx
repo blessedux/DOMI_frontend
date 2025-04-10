@@ -9,18 +9,9 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-3">
-          <Image 
-            src="/icons/logo/domilogo1.svg" 
-            alt="DOMI Logo" 
-            width={32} 
-            height={32} 
-            className="h-8 w-8" 
-          />
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">Panel de control</h2>
-            <p className="text-muted-foreground">Bienvenido al sistema de gestión de permisos municipales.</p>
-          </div>
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Panel de control</h2>
+          <p className="text-muted-foreground">Bienvenido al sistema de gestión de permisos municipales.</p>
         </div>
         <div className="flex gap-2 flex-col sm:flex-row">
           <Button className="gap-1 bg-pink-500 hover:bg-pink-600" asChild>

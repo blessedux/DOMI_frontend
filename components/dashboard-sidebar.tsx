@@ -43,11 +43,6 @@ export function DashboardSidebar({ userRole = "applicant" }: DashboardSidebarPro
         icon: Home,
       },
       {
-        title: "Mis solicitudes",
-        href: "/dashboard/applications",
-        icon: FileText,
-      },
-      {
         title: "Nueva solicitud",
         href: "/dashboard/new-application",
         icon: Upload,
@@ -67,7 +62,7 @@ export function DashboardSidebar({ userRole = "applicant" }: DashboardSidebarPro
       },
       {
         title: "Solicitudes pendientes",
-        href: "/reviewer-dashboard/pending",
+        href: "/dashboard/applications",
         icon: FileText,
       },
       {
@@ -122,7 +117,7 @@ export function DashboardSidebar({ userRole = "applicant" }: DashboardSidebarPro
       <SidebarHeader className="border-b border-pink-100">
         <div className="flex items-center gap-2 px-2 py-3">
           <Image 
-            src="/icons/logo/domilogo.svg" 
+            src="/icons/logo/domilogo1.svg" 
             alt="DOMI Logo" 
             width={24} 
             height={24} 

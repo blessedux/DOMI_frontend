@@ -2,8 +2,9 @@
 
 import { useState, useEffect, Suspense } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useSearchParams } from "next/navigation"
-import { ArrowLeft, FileUp, Upload, Sparkles, Search, Download, AlertTriangle, Brain, HelpCircle, CheckCircle2, FileText } from "lucide-react"
+import { ArrowLeft, FileUp, Upload, Sparkles, Search, Download, AlertTriangle, Brain, HelpCircle, CheckCircle2, FileText, ThumbsUp, ThumbsDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -18,15 +19,36 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import Image from "next/image"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
 
 function AIAnalysisContent() {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const appId = searchParams.get("appId")
   const [analysisState, setAnalysisState] = useState<"initial" | "loading" | "complete">("initial")
   const [analysisType, setAnalysisType] = useState<string>("planos")
+  const [isReviewer, setIsReviewer] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showApproveDialog, setShowApproveDialog] = useState(false)
+  const [showRejectDialog, setShowRejectDialog] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
+    // Check if user is a reviewer based on URL path or localStorage
+    const isReviewerUser = window.location.pathname.includes('/reviewer-dashboard') 
+      || localStorage.getItem('userRole') === 'reviewer'
+    
+    setIsReviewer(isReviewerUser)
+
     if (appId) {
       toast({
         title: "Solicitud vinculada",
@@ -50,11 +72,58 @@ function AIAnalysisContent() {
     }, 3500)
   }
 
+  const handleApprove = () => {
+    setIsSubmitting(true)
+
+    // Simulate submission
+    setTimeout(() => {
+      setIsSubmitting(false)
+      setShowApproveDialog(false)
+
+      toast({
+        title: "Solicitud aprobada",
+        description: "La solicitud ha sido aprobada y enviada al siguiente nivel de revisión",
+      })
+
+      // Navigate back to reviewer page with analysis complete param
+      if (isReviewer && appId) {
+        router.push(`/reviewer-dashboard/review/${appId}?fromAnalysis=true`)
+      }
+    }, 2000)
+  }
+
+  const handleReject = () => {
+    setIsSubmitting(true)
+
+    // Simulate submission
+    setTimeout(() => {
+      setIsSubmitting(false)
+      setShowRejectDialog(false)
+
+      toast({
+        title: "Solicitud rechazada",
+        description: "La solicitud ha sido rechazada y se ha notificado al solicitante",
+      })
+
+      // Navigate back to reviewer page with analysis complete param
+      if (isReviewer && appId) {
+        router.push(`/reviewer-dashboard/review/${appId}?fromAnalysis=true`)
+      }
+    }, 2000)
+  }
+
+  const getBackLink = () => {
+    if (isReviewer && appId) {
+      return `/reviewer-dashboard/review/${appId}`
+    }
+    return appId ? `/dashboard/applications/${appId}` : "/dashboard"
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon" asChild>
-          <Link href={appId ? `/dashboard/applications/${appId}` : "/dashboard"}>
+          <Link href={getBackLink()}>
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
@@ -190,11 +259,76 @@ function AIAnalysisContent() {
                   </div>
                 </div>
                 
-                <div className="flex justify-end">
-                  <Button className="gap-1 bg-indigo-500 hover:bg-indigo-600">
-                    <FileText className="h-4 w-4" />
-                    Ver informe completo
-                  </Button>
+                <div className="flex flex-col gap-2">
+                  {isReviewer && (
+                    <div className="flex gap-2 mt-2">
+                      <Dialog open={showApproveDialog} onOpenChange={setShowApproveDialog}>
+                        <DialogTrigger asChild>
+                          <Button className="w-full gap-1" variant="default">
+                            <ThumbsUp className="h-4 w-4" />
+                            Aprobar solicitud
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Aprobar solicitud</DialogTitle>
+                            <DialogDescription>
+                              ¿Está seguro de que desea aprobar esta solicitud? La solicitud pasará al siguiente nivel de
+                              revisión.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4 py-4">
+                            <Textarea placeholder="Comentarios adicionales (opcional)" rows={4} />
+                          </div>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => setShowApproveDialog(false)}>
+                              Cancelar
+                            </Button>
+                            <Button onClick={handleApprove} disabled={isSubmitting} className="gap-1">
+                              <CheckCircle2 className="h-4 w-4" />
+                              {isSubmitting ? "Aprobando..." : "Confirmar aprobación"}
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+
+                      <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
+                        <DialogTrigger asChild>
+                          <Button className="w-full gap-1" variant="destructive">
+                            <ThumbsDown className="h-4 w-4" />
+                            Rechazar solicitud
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Rechazar solicitud</DialogTitle>
+                            <DialogDescription>
+                              ¿Está seguro de que desea rechazar esta solicitud? Esta acción no se puede deshacer.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4 py-4">
+                            <Textarea placeholder="Motivo del rechazo (requerido)" rows={4} required />
+                          </div>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => setShowRejectDialog(false)}>
+                              Cancelar
+                            </Button>
+                            <Button onClick={handleReject} disabled={isSubmitting} variant="destructive" className="gap-1">
+                              <AlertTriangle className="h-4 w-4" />
+                              {isSubmitting ? "Rechazando..." : "Confirmar rechazo"}
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-end">
+                    <Button className="gap-1 bg-indigo-500 hover:bg-indigo-600">
+                      <FileText className="h-4 w-4" />
+                      Ver informe completo
+                    </Button>
+                  </div>
                 </div>
               </div>
             )}

@@ -23,7 +23,10 @@ export default function ReviewerDashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">+3 desde ayer</p>
+            <p className="text-xs text-muted-foreground mb-2">+3 desde ayer</p>
+            <Button size="sm" variant="outline" className="w-full text-xs" asChild>
+              <Link href="/dashboard/applications">Ver todas</Link>
+            </Button>
           </CardContent>
         </Card>
         <Card>
@@ -59,9 +62,14 @@ export default function ReviewerDashboardPage() {
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Solicitudes pendientes de revisión</CardTitle>
-          <CardDescription>Solicitudes asignadas a usted que requieren revisión</CardDescription>
+        <CardHeader className="flex justify-between items-center">
+          <div>
+            <CardTitle>Solicitudes pendientes de revisión</CardTitle>
+            <CardDescription>Solicitudes asignadas a usted que requieren revisión</CardDescription>
+          </div>
+          <Button asChild>
+            <Link href="/dashboard/applications">Ver todas</Link>
+          </Button>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-2 mb-6">
